@@ -47,8 +47,6 @@ static bool lib_aci_change_timing(uint16_t minimun_cx_interval, uint16_t maximum
 static bool lib_aci_change_timing_GAP_PPCP();
 static bool lib_aci_set_local_data(uint8_t pipe, uint8_t *p_value, uint8_t size);
 
-
-
 static void __ISR(_CORE_SOFTWARE_0_VECTOR, ipl4) swi_message_pump(void) {
 
     CoreClearSoftwareInterrupt0();
@@ -60,13 +58,14 @@ static void __ISR(_CORE_SOFTWARE_1_VECTOR, ipl2) swi_data_rcved(void) {
     aci_evt_t *paci_evt = NULL;
     CoreClearSoftwareInterrupt1();
     INTClearFlag(INT_CS1);
-    paci_evt = (aci_evt_t*) aci_queue_dequeue_waiting();
-    if (paci_evt != NULL && (paci_evt->len - 2) > 0) {
-        pon_data_clbk(paci_evt->params.data_received.rx_data.aci_data, 
-                        paci_evt->len - 2,
-                        paci_evt->params.data_received.rx_data.pipe_number);    
-    }
-
+    do {
+        paci_evt = (aci_evt_t*) aci_queue_dequeue_waiting();
+        if (paci_evt != NULL && (paci_evt->len - 2) > 0) {
+            pon_data_clbk(paci_evt->params.data_received.rx_data.aci_data,
+                    paci_evt->len - 2,
+                    paci_evt->params.data_received.rx_data.pipe_number);
+        }
+    } while (paci_evt);
 }
 
 static void bleEventSWIOn() {
@@ -103,10 +102,9 @@ static bool wait_any_isr_event(aci_evt_t* paci_evt) {
     uint8_t *pReturn = NULL;
     uint16_t i;
 
-    for (i = 0; i < 60000; i++) {
+    for (i = 0; i < 5000; i++) {
         pReturn = aci_queue_dequeue_isr();
         if (pReturn != NULL) {
-            //memcpy(received_data.buffer, pReturn, 32);
             *paci_evt = *((aci_evt_t*) pReturn);
             if (paci_evt->evt_opcode != ACI_EVT_INVALID) {
                 return true;
@@ -127,8 +125,6 @@ static bool get_any_event(aci_evt_t* paci_evt) {
 
     if (pReturn != NULL) {
         *paci_evt = *((aci_evt_t*) pReturn);
-        memcpy(received_data.buffer, pReturn, 32);
-
         if (paci_evt->evt_opcode != ACI_EVT_INVALID) {
             return true;
         }
@@ -204,6 +200,7 @@ bool ble_board_init() {
     //now send the setup messages as defined by nrfGo services.h
     for (i = 0; i < NB_SETUP_MESSAGES; i++) {
         m_aci_spi_transfer(&init_data_to_send[i], &received_data);
+        Delayus(50);
         do {
             retVal = wait_any_isr_event(&aci_evt);
             if (!retVal) {
@@ -413,7 +410,7 @@ bool lib_aci_send_data(uint8_t pipe, uint8_t *p_value, uint8_t size) {
     aci_cmd_params_send_data.tx_data.pipe_number = pipe;
     memcpy(aci_cmd_params_send_data.tx_data.aci_data, p_value, size);
     acil_encode_cmd_send_data(data_to_send.buffer, &aci_cmd_params_send_data, size);
-    while(!m_aci_spi_transfer(&data_to_send, &received_data));
+    while (!m_aci_spi_transfer(&data_to_send, &received_data));
 
     return true;
 }

@@ -16,12 +16,14 @@
 // ---------------------------------------------------------------------------
 // </editor-fold>
 
-void Delayus(UINT32 usdelay) {
+void Delayus(uint32_t usdelay) {
+    uint32_t beginState = ReadCoreTimer();
     uint32_t ttcount = usdelay *= TT_PER_US;
     uint32_t startTicks = 0;
     WriteCoreTimer(0);
     startTicks = ReadCoreTimer();
-    while ((UINT32) (ReadCoreTimer() - startTicks) < ttcount) {};
+    while ((ReadCoreTimer() - startTicks) < ttcount) {};
+    WriteCoreTimer(beginState);
 }
 
 void DelayMs(unsigned int msec) {
