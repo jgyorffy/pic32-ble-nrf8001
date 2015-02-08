@@ -1,0 +1,26 @@
+Part Value                        Package       
+                                  
+AE1 2.4GHZ chip antenna           PULSE_W3008   
+C1  18pF                          “0402”          
+C2  18pF                          “0402”          
+C3  2.2nF                         “0402”          
+C4  0F (open conne                “0402”          
+C5  1.8pF                         “0402”          
+C6  1.2pF                         “0402”          
+C7  1uF                           “0402”          
+C8  1nF                           “0402”          
+C9  100nF                         “0402”          
+C10 100nF                         “0402”          
+C11 33nF                          “0402”          
+C12 100nH                         “0402”          
+C13 9pF                           “0402”          
+C14 9pF                           “0402”          
+L1  8.2nH                         “0402”          
+L2  5.6nH                         “0402”          
+L3  3.9nH                         “0402”          
+L4  10uH                          “0402”          
+L5  15nH                          “0402”          
+R1  22k                           “0402”          
+U1  NRF8001                       QFN-32       
+X1  16MHz crystal                         
+X2  32.768kHz crystal                    
