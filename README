@@ -1,0 +1,14 @@
+The genesis of this project was that the Nordic code for Arduino was not focused to PIC32 and was a mess to maintain and upgrade. I simplified the code by removing unneeded data structures and functions to reduce and simplify the code base. Also, this project is event-driven and does rely on an interrupt vs polling.  It is specific to a UART-driven application. That is, it is for pushing bulk data (well...if you consider 20-byte packets "bulk").
+
+There are two parts to this project:
+1. nRF8001 schematic and board (Eagle)
+2. PIC 32 focused UART driver
+
+The board uses only 0402 components to reduce mutual inductances so you will need a good magnifying system to lay down the components.  There is a board already created on OSHPark:
+https://oshpark.com/shared_projects/0P89EtVt
+
+This can be tested by using Nordic's Android application called BLE-UART. Currently, the driver just sends back what was sent.
+
+***NOTE: Android has a bug in the BLE code and will not refresh the characteristics. Please refer to this fix (hack):
+
+http://stackoverflow.com/questions/22596951/how-to-programmatically-force-bluetooth-low-energy-service-discovery-on-android
