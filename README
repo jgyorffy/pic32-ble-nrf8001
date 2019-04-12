@@ -1,4 +1,4 @@
-The genesis of this project was that the Nordic code for Arduino was not focused to PIC32 and was a mess to maintain and upgrade. I simplified the code by removing unneeded data structures and functions to reduce and simplify the code base. Also, this project is event-driven and does rely on an interrupt vs polling.  It is specific to a UART-driven application. The use-case is for pushing bulk data (20-byte packets).
+The motivation of this project was to refactor and target the Nordic code for Arduino to a PIC32. The code was simplified by removing unneeded data structures and functions to reduce and simplify the code base. Also, this project is event-driven and does rely on an interrupt vs polling.  It is specific to a UART-driven application. The use-case is for pushing bulk data (20-byte packets).
 
 There are two parts to this project:
 1. nRF8001 schematic and board (Eagle)
